@@ -1,5 +1,12 @@
-XOAC Firmware Update Tool
-=========================
+# XAOC Devices Batumi Firmware
+Orignal, Alternate, and custom firmwares for the XAOC Devices Batumi module.
+
+## Branch Structure
+The `master` and `alternate` branches are frozen. It is possible to modify them, but they are essentially premanently diverged. There are no changes in this repository to either branch beyond what is contained in the upstream repository. If you are interested in building and running the original "factory" firmware, the `master` branch will work for that purpose. Likewise, if you are interested in building and running the "alternate" firmware created by Matthias Puech, the `alternate` branch will work.
+
+The `main` branch is the current tip of my own code, forked from the original XAOC repository. This branch is derived originally from `alternate`.
+
+## XOAC Firmware Update Tool
 
 File: XAOC Firmware Update Tool - OSX.app
 File: XAOC Firmware Update Tool - Windows.exe
@@ -22,8 +29,7 @@ To proceed, carefully follow the steps below:
 - When the update is done, do not forget to put the "Update" jumper
   back to its original position, and to plug it back into your case.
 
-FTDI Drivers
-------------
+### FTDI Drivers
 
 Both Windows and OSX should come pre-installed with generic drivers to
 communicate with the Batumi, but in some cases it has been found
@@ -35,8 +41,7 @@ drivers can be found here:
 - Windows: https://learn.sparkfun.com/tutorials/how-to-install-ftdi-drivers/windows---in-depth
 - Mac OS X: https://learn.sparkfun.com/tutorials/how-to-install-ftdi-drivers/mac
 
-Important note
---------------
+### Important note
 
 In some rare cases, overheating has been observed when USB is plugged
 into Batumi. This could potentially damage your module, and the cause
@@ -47,10 +52,7 @@ is). Should this zone become hot, unplug the USB connector and please
 report all the circumstances (positions of the jumpers, PCB detached
 or not, step in the update, operating system and driver used...).
 
-
-Batumi main firmware
-====================
-
+## Batumi Main Firmware
 File: batumi-v0.45.bin
 
 List of changes with respect to the previous version:
@@ -75,10 +77,7 @@ List of changes with respect to the previous version:
 
 - a short press on the button now exits Zoom mode
 
-
-Batumi alternate firmware documentation
-=======================================
-
+## Batumi alternate firmware documentation
 File: batumi-alt-v0.30.bin
 
 The alternate firmware has all the features of the new main firmware
@@ -93,9 +92,7 @@ above, plus the following:
 - Advanced zoom interface (see below)
 
 
-Random wave bank
-----------------
-
+### Random wave bank
 There are now two banks of assignable waveforms (on the Saw/Asgn
 output): the original one--saw, ramp, triangle and trapezoid--and a
 new bank of more unpredictable waveforms. To switch bank, press the
@@ -128,9 +125,7 @@ stream, only delayed by the phase shift. Similarly, in Divide
 mode, the random values of the slave channels (2-4) will be sampled
 from the master channel (1).
 
-New Quad mode
--------------
-
+### New Quad mode
 The Quad mode changes function completely. The old Quadrature mode can
 be accessed in Phase mode by setting the sliders 2, 3 and 4 to their
 highest position. The phase will then "snap" to quadrature mode.
@@ -165,9 +160,7 @@ FM input of your oscillator and change the levels.
 A final tip: try to abuse the first Sine output as a VCO, putting an
 offset in the first CV input.
 
-Advanced zoom interface
------------------------
-
+### Advanced zoom interface
 The Zoom mode changes drastically: instead of a fine control, it now
 allows to set four different parameters for each channel, including
 the fine control. Zoom mode acts only on the last channel modified; to
