@@ -2,7 +2,7 @@
 Orignal, Alternate, and custom firmwares for the XAOC Devices Batumi module.
 
 ## Branch Structure
-The `master` and `alternate` branches are frozen. It is possible to modify them, but they are essentially premanently diverged. There are no changes in this repository to either branch beyond what is contained in the upstream repository. If you are interested in building and running the original "factory" firmware, the `master` branch will work for that purpose. Likewise, if you are interested in building and running the "alternate" firmware created by Matthias Puech, the `alternate` branch will work.
+The `master` and `alternate` branches are frozen, and have been renamed `legacy_master` and `legacy_alternate`, respectively. It is possible to modify them, but they are essentially premanently diverged. There are no changes in this repository to either branch beyond what is contained in the upstream repository. If you are interested in building and running the original "factory" firmware, the `legacy_master` branch will work for that purpose. Likewise, if you are interested in building and running the "alternate" firmware created by Matthias Puech, the `legacy_alternate` branch will work.
 
 The `main` branch is the current tip of my own code, forked from the original XAOC repository. This branch is derived originally from `alternate`.
 
