@@ -8,10 +8,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // See http://creativecommons.org/licenses/MIT/ for more information.
 //
 // -----------------------------------------------------------------------------
@@ -29,26 +29,22 @@
 // Automatically generated with:
 // make resources
 
-
 #ifndef _RESOURCES_H_
 #define _RESOURCES_H_
 
-
 #include "stmlib/stmlib.h"
-
-
 
 namespace batumi {
 
 typedef uint8_t ResourceId;
 
-extern const char* string_table[];
+extern const char *string_table[];
 
-extern const uint16_t* lookup_table_table[];
+extern const uint16_t *lookup_table_table[];
 
-extern const uint32_t* lookup_table_32_table[];
+extern const uint32_t *lookup_table_32_table[];
 
-extern const int16_t* waveform_table[];
+extern const int16_t *waveform_table[];
 
 extern const uint16_t lut_scale_pitch[];
 extern const uint16_t lut_scale_phase[];
@@ -93,7 +89,7 @@ extern const int16_t wav_bl_step28[];
 extern const int16_t wav_bl_step29[];
 extern const int16_t wav_bl_step30[];
 extern const int16_t wav_bl_step31[];
-#define STR_DUMMY 0  // dummy
+#define STR_DUMMY 0 // dummy
 #define LUT_SCALE_PITCH 0
 #define LUT_SCALE_PITCH_SIZE 257
 #define LUT_SCALE_PHASE 1
@@ -181,6 +177,6 @@ extern const int16_t wav_bl_step31[];
 #define WAV_BL_STEP31 38
 #define WAV_BL_STEP31_SIZE 8
 
-}  // namespace batumi
+} // namespace batumi
 
-#endif  // _RESOURCES_H_
+#endif // _RESOURCES_H_
