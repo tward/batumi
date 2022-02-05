@@ -1,0 +1,38 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build firmware",
+            "type": "shell",
+            "command": "make",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "rebuild firmware",
+            "type": "shell",
+            "command": "make clean && make",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "create bootloader",
+            "type": "shell",
+            "command": "mv Makefile build/Makefile && mv bootloader/Makefile Makefile && make clean && make && mv Makefile bootloader/Makefile && mv build/Makefile Makefile",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "create package bin",
+            "type": "shell",
+            "command": "make build/batumi/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.bin build/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.hex build/batumi_bootloader_combo.hex",
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ]
+}
