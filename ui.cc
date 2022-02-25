@@ -137,9 +137,8 @@ void Ui::Poll() {
 
     case UI_MODE_ZOOM:
         animation_counter_++;
-        for (uint8_t i = 0; i < kNumLeds; i++)
-            leds_.set(i, false);
-        leds_.set(last_touched_pot_, animation_counter_ & 128);
+        for (uint8_t i = 0; i < kNumLeds; i++) leds_.set(i, false);
+        leds_.set(focus_channel_, animation_counter_ & 128);
         break;
 
     case UI_MODE_NORMAL:
@@ -179,9 +178,9 @@ void Ui::OnSwitchReleased(const Event &e) {
             if (mode_ == UI_MODE_NORMAL) {
                 mode_ = UI_MODE_ZOOM;
             } else if (mode_ == UI_MODE_ZOOM) {
+                // detect if pots have moved during zoom
                 for (int i = 0; i < 4; i++)
-                    if (abs(pot_value_[i] - pot_coarse_value_[i]) >
-                        kCatchupThreshold) {
+                    if (abs(pot_value_[i] - pot_coarse_value_[i]) > kCatchupThreshold) {
                         catchup_state_[i] = true;
                     }
                 mode_ = UI_MODE_NORMAL;
@@ -193,15 +192,8 @@ void Ui::OnSwitchReleased(const Event &e) {
             case UI_MODE_SPLASH:
                 break;
             case UI_MODE_ZOOM:
-                // detect if pots have moved during zoom
-                for (int i = 0; i < 4; i++)
-                    if (abs(pot_value_[i] - pot_coarse_value_[i]) >
-                        kCatchupThreshold) {
-                        catchup_state_[i] = true;
-                    }
-                mode_ = UI_MODE_NORMAL;
-                storage.ParsimoniousSave(&feat_mode_, SETTINGS_SIZE,
-                                         &version_token_);
+                // increment the focused channel
+                focus_channel_ = (focus_channel_ + 1) % 4; // TODO: make the number of channels a real symbol
                 break;
 
             case UI_MODE_NORMAL:
@@ -230,21 +222,21 @@ void Ui::OnPotChanged(const Event &e) {
     case UI_MODE_ZOOM:
         switch (e.control_id) {
         case 0:
-            pot_fine_value_[last_touched_pot_] = e.data;
+            pot_fine_value_[focus_channel_] = e.data;
             break;
         case 1:
-            pot_level_value_[last_touched_pot_] = e.data;
+            pot_level_value_[focus_channel_] = e.data;
             break;
         case 2:
-            pot_atten_value_[last_touched_pot_] = e.data;
+            pot_atten_value_[focus_channel_] = e.data;
             break;
         case 3:
-            pot_phase_value_[last_touched_pot_] = e.data;
+            pot_phase_value_[focus_channel_] = e.data;
             break;
         }
         break;
     case UI_MODE_NORMAL:
-        last_touched_pot_ = e.control_id;
+        focus_channel_ = e.control_id;
         if (!catchup_state_[e.control_id]) {
             pot_coarse_value_[e.control_id] = e.data;
         } else if (abs(e.data - pot_coarse_value_[e.control_id]) <

@@ -97,7 +97,7 @@ class Ui {
     uint16_t pot_value_[4];
     uint16_t pot_filtered_value_[4];
     uint16_t pot_coarse_value_[4];
-    uint8_t last_touched_pot_;
+    uint8_t focus_channel_ = 0;
     uint32_t press_time_[kNumSwitches];
     bool detect_very_long_press_[kNumSwitches];
     bool catchup_state_[4];
