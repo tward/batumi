@@ -34,8 +34,8 @@
 #include "drivers/adc.h"
 #include "stmlib/utils/random.h"
 #include "stmlib/system/uid.h"
-#include "ui.h"
-#include "processor.h"
+#include "core/ui.h"
+#include "core/processor.h"
 
 using namespace batumi;
 using namespace stmlib;
