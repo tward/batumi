@@ -33,6 +33,13 @@
             "command": "make build/batumi/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.bin build/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.hex build/batumi_bootloader_combo.hex",
             "problemMatcher": [],
             "group": "build"
+        },
+        {
+            "label": "deploy package",
+            "type": "shell",
+            "command": "stm32flash -w build/batumi_bootloader_combo.bin /dev/tty.usbserial-DN03WZDG",
+            "problemMatcher": [],
+            "group": "build"
         }
     ]
 }
