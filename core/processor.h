@@ -32,7 +32,7 @@
 #include "drivers/adc.h"
 #include "drivers/dac.h"
 
-#include "lfo.h"
+#include "../turingmachine/shiftregister.h"
 #include "ui.h"
 
 namespace batumi {
@@ -48,25 +48,13 @@ class Processor {
     void Process();
 
   private:
-    Lfo lfo_[kNumChannels];
+    ShiftRegister machines_[kNumChannels];
     Ui *ui_;
     Adc *adc_;
     Dac *dac_;
 
-    FeatureMode previous_feat_mode_;
-
     bool reset_trigger_armed_[kNumChannels];
-    bool reset_triggered_[kNumChannels];
-    uint8_t reset_subsample_[kNumChannels];
-    uint32_t last_reset_[kNumChannels];
-    int16_t previous_reset_[kNumChannels];
-    uint16_t last_coarse_[kNumChannels];
-    bool synced_[kNumChannels];
     int16_t filtered_cv_[kNumChannels];
-    uint8_t waveform_offset_;
-    uint16_t sync_counter_;
-
-    void SetFrequency(int8_t lfo_no);
 
     DISALLOW_COPY_AND_ASSIGN(Processor);
 };

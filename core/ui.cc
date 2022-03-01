@@ -52,23 +52,21 @@ void Ui::Init(Adc *adc) {
     switches_.Init(adc_);
     animation_counter_ = 0;
 
-    if (!storage.ParsimoniousLoad(&feat_mode_, SETTINGS_SIZE,
-                                  &version_token_)) {
-        feat_mode_ = FEAT_MODE_FREE;
-        bank_ = BANK_CLASSIC;
+    if (!storage.ParsimoniousLoad(&pot_probability_value_, SETTINGS_SIZE, &version_token_)) {
+        // feat_mode_ = FEAT_MODE_FREE;
+        // bank_ = BANK_CLASSIC;
         for (int i = 0; i < 4; i++) {
-            pot_fine_value_[i] = 0;
-            pot_phase_value_[i] = UINT16_MAX;
-            pot_level_value_[i] = UINT16_MAX;
-            pot_atten_value_[i] = UINT16_MAX;
+            pot_probability_value_[i] = 0;
+            pot_div_value_[i] = UINT16_MAX;
+            pot_range_value_[i] = UINT16_MAX;
+            pot_length_value_[i] = UINT16_MAX;
         }
     }
 
     // synchronize pots at startup
     for (uint8_t i = 0; i < 4; i++) {
         uint16_t adc_value = adc_->pot(i);
-        pot_value_[i] = pot_filtered_value_[i] = pot_coarse_value_[i] =
-            adc_value;
+        pot_value_[i] = pot_filtered_value_[i] = pot_coarse_value_[i] = adc_value;
         catchup_state_[i] = false;
     }
 }
@@ -134,23 +132,17 @@ void Ui::Poll() {
         }
         animation_counter_++;
         break;
-
-    case UI_MODE_ZOOM:
-        animation_counter_++;
-        for (uint8_t i = 0; i < kNumLeds; i++) leds_.set(i, false);
-        leds_.set(focus_channel_, animation_counter_ & 128);
-        break;
-
+        
     case UI_MODE_NORMAL:
         animation_counter_++;
-        bool flash = (animation_counter_ & 64) && (animation_counter_ & 32) &&
-                     (animation_counter_ & 16);
-        for (uint8_t i = 0; i < kNumLeds; i++) {
-            if (catchup_state_[i])
-                leds_.set(i, i == feat_mode_ ? !flash : flash);
-            else
-                leds_.set(i, i == feat_mode_);
-        }
+        // bool flash = (animation_counter_ & 64) && (animation_counter_ & 32)
+        // && (animation_counter_ & 16); for (uint8_t i = 0; i < kNumLeds; i++)
+        // {
+        //     if (catchup_state_[i])
+        //         leds_.set(i, i == feat_mode_ ? !flash : flash);
+        //     else
+        //         leds_.set(i, i == feat_mode_);
+        // }
         break;
     }
 
@@ -163,54 +155,19 @@ void Ui::OnSwitchPressed(const Event &e) {}
 
 void Ui::OnSwitchReleased(const Event &e) {
     switch (e.control_id) {
-    case SWITCH_SYNC:
-    case SWITCH_WAV1:
-    case SWITCH_WAV2:
-        break;
     case SWITCH_SELECT:
-        if (e.data > kVeryLongPressDuration) {
-            bank_ = static_cast<WaveBank>((bank_ + 1) % BANK_LAST);
-            animation_counter_ = 0;
-            mode_ = UI_MODE_SPLASH;
-            storage.ParsimoniousSave(&feat_mode_, SETTINGS_SIZE,
-                                     &version_token_);
-        } else if (e.data > kLongPressDuration) {
-            if (mode_ == UI_MODE_NORMAL) {
-                mode_ = UI_MODE_ZOOM;
-            } else if (mode_ == UI_MODE_ZOOM) {
-                // detect if pots have moved during zoom
-                for (int i = 0; i < 4; i++)
-                    if (abs(pot_value_[i] - pot_coarse_value_[i]) > kCatchupThreshold) {
-                        catchup_state_[i] = true;
-                    }
-                mode_ = UI_MODE_NORMAL;
-                storage.ParsimoniousSave(&feat_mode_, SETTINGS_SIZE,
-                                         &version_token_);
-            }
-        } else {
-            switch (mode_) {
-            case UI_MODE_SPLASH:
-                break;
-            case UI_MODE_ZOOM:
-                // increment the focused channel
-                focus_channel_ = (focus_channel_ + 1) % 4; // TODO: make the number of channels a real symbol
-                break;
-
-            case UI_MODE_NORMAL:
-                feat_mode_ =
-                    static_cast<FeatureMode>((feat_mode_ + 1) % FEAT_MODE_LAST);
-                // reset all alternate values
-                for (int i = 0; i < 4; i++) {
-                    pot_fine_value_[i] = UINT16_MAX / 2;
-                    pot_level_value_[i] = UINT16_MAX;
-                    pot_atten_value_[i] = UINT16_MAX;
-                    pot_phase_value_[i] = UINT16_MAX;
-                }
-                storage.ParsimoniousSave(&feat_mode_, SETTINGS_SIZE,
-                                         &version_token_);
-                break;
-            }
+        switch (mode_) {
+        case UI_MODE_SPLASH:
+            break;
+           
+        case UI_MODE_NORMAL:
+            // Increment the selected channel
+            // storage.ParsimoniousSave(&feat_mode_, SETTINGS_SIZE, &version_token_);
+            break;
         }
+        break;
+
+    default:
         break;
     }
 }
@@ -219,22 +176,7 @@ void Ui::OnPotChanged(const Event &e) {
     switch (mode_) {
     case UI_MODE_SPLASH:
         break;
-    case UI_MODE_ZOOM:
-        switch (e.control_id) {
-        case 0:
-            pot_fine_value_[focus_channel_] = e.data;
-            break;
-        case 1:
-            pot_level_value_[focus_channel_] = e.data;
-            break;
-        case 2:
-            pot_atten_value_[focus_channel_] = e.data;
-            break;
-        case 3:
-            pot_phase_value_[focus_channel_] = e.data;
-            break;
-        }
-        break;
+
     case UI_MODE_NORMAL:
         focus_channel_ = e.control_id;
         if (!catchup_state_[e.control_id]) {

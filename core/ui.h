@@ -41,21 +41,11 @@ namespace batumi {
 
 const uint8_t kFinePotDivider = 8;
 
-enum FeatureMode {
-    FEAT_MODE_FREE,
-    FEAT_MODE_QUAD,
-    FEAT_MODE_PHASE,
-    FEAT_MODE_DIVIDE,
-    FEAT_MODE_LAST
-};
-
 enum UiMode {
     UI_MODE_SPLASH,
-    UI_MODE_NORMAL,
-    UI_MODE_ZOOM,
+    UI_MODE_NORMAL/*,
+    UI_MODE_ZOOM,*/
 };
-
-enum WaveBank { BANK_CLASSIC, BANK_RANDOM, BANK_LAST };
 
 class Ui {
   public:
@@ -72,18 +62,17 @@ class Ui {
     }
 
     inline int16_t fine(uint8_t channel) {
-        return pot_fine_value_[channel] - 32768;
+        return pot_probability_value_[channel] - 32768;
     }
 
-    inline uint16_t phase(uint8_t channel) { return pot_phase_value_[channel]; }
+    inline uint16_t phase(uint8_t channel) { return pot_div_value_[channel]; }
 
-    inline uint16_t level(uint8_t channel) { return pot_level_value_[channel]; }
+    inline uint16_t level(uint8_t channel) { return pot_range_value_[channel]; }
 
-    inline uint16_t atten(uint8_t channel) { return pot_atten_value_[channel]; }
+    inline uint16_t atten(uint8_t channel) { return pot_length_value_[channel]; }
 
-    inline FeatureMode feat_mode() const { return feat_mode_; }
     inline UiMode mode() const { return mode_; }
-    inline WaveBank bank() const { return bank_; }
+    
     inline uint8_t shape() const {
         return (switches_.pressed(2) << 1) | switches_.pressed(1);
     }
@@ -111,18 +100,19 @@ class Ui {
     Adc *adc_;
     UiMode mode_;
 
-    FeatureMode feat_mode_;
-    WaveBank bank_;
-    uint8_t padding[2];
-    uint16_t pot_fine_value_[4];
-    uint16_t pot_level_value_[4];
-    uint16_t pot_atten_value_[4];
-    uint16_t pot_phase_value_[4];
+    // This originally added up to 42 in the stock firmware
+    // FeatureMode feat_mode_;             // +4 bytes?
+    // WaveBank bank_;                     // +4 bytes?
+    uint16_t pot_probability_value_[4]; // +8 bytes
+    uint16_t pot_range_value_[4];       // +8 bytes
+    uint16_t pot_length_value_[4];      // +8 bytes
+    uint16_t pot_div_value_[4];         // +8 bytes
+    uint8_t padding[10];                // +10 bytes (was +2 originally)
 
     enum SettingsSize {
-        SETTINGS_SIZE = sizeof(feat_mode_) + sizeof(bank_) +
-                        sizeof(pot_fine_value_) + sizeof(pot_phase_value_) +
-                        sizeof(pot_level_value_) + sizeof(pot_atten_value_) +
+        SETTINGS_SIZE = /*sizeof(feat_mode_) + sizeof(bank_) +*/
+                        sizeof(pot_probability_value_) + sizeof(pot_div_value_) +
+                        sizeof(pot_range_value_) + sizeof(pot_length_value_) +
                         sizeof(padding)
     };
 

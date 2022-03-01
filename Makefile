@@ -44,7 +44,7 @@ UPLOAD_COMMAND  = upload_combo_jtag
 # Packages to build
 TARGET         = batumi
 BOOTLOADER     = batumi_bootloader
-PACKAGES       = . drivers core stmlib/utils stmlib/system
+PACKAGES       = . drivers core turingmachine stmlib/utils stmlib/system
 RESOURCES      = resources
 ORIGINAL_BIN  = $(RESOURCES)/original_firmware.bin
 
