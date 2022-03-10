@@ -40,6 +40,13 @@
             "command": "stm32flash -w build/batumi_bootloader_combo.bin /dev/tty.usbserial-DN03WZDG",
             "problemMatcher": [],
             "group": "build"
+        },
+        {
+            "label": "clean and redeploy",
+            "type": "shell",
+            "command": "make clean && make && make build/batumi/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.bin build/batumi_bootloader_combo.bin && mv build/batumi/batumi_bootloader_combo.hex build/batumi_bootloader_combo.hex && stm32flash -w build/batumi_bootloader_combo.bin /dev/tty.usbserial-DN03WZDG",
+            "problemMatcher": [],
+            "group": "build"
         }
     ]
 }
