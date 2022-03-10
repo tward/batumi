@@ -3,7 +3,6 @@
 
 void ShiftRegister::Init() {
     // Note: this assumes random has been properly seeded prior to calling
-    // TODO: write this method in a way that allows for easily calling at will, at runtime, in the event the UI adds a reset/randomize feature
 
     // It's OK to leave the control params at whatever value they're currently at...
     //  They get defaulted appropriately in the class definition
@@ -16,38 +15,33 @@ void ShiftRegister::Init() {
 
     // Fill the register with a randomized WORD value
     reg_ = stmlib::Random::GetWord();
-    // reg_ = rand();
+
+    SetLength(8);
 }
 
 void ShiftRegister::Step() {
     stp_cnt_++;
 
     // No need to do anything if the step doesn't fall on the set division
-    // if (stp_cnt_ % div_)
-        // return;
+    if (stp_cnt_ % div_)
+        return;
 
-    // Capture the LSB(s)
-    uint32_t lsb = reg_ & static_cast<uint32_t>(1);
-    uint32_t lsb_ex = (len_ < 32) ? (reg_ & (static_cast<uint32_t>(1) << len_)) >> len_ : 0;
-
-    // Shift the register
-    reg_ = reg_ >> 1;
-
-    // Put LSB back in MSB
-    // number = (number & ~(1UL << n)) | (x << n);
-    // TODO: need to figure out why this doesn't work with (len_ - 1)!
-    reg_ = (reg_ & ~(static_cast<uint32_t>(1) << (8 - 1))) | (lsb << (8 - 1));
-    if (len_ < 32)
-        reg_ = (reg_ & ~(static_cast<uint32_t>(1) << 31)) | (lsb_ex << 31);
-
-    // Roll the dice to flip LSB
-    if (stmlib::Random::GetSample() < prb_) {
-        reg_ ^= static_cast<uint32_t>(1);
-    }
+    // rotate the whole register by n=32/len steps
+    // NOTE: the shift_step_ value can potentially be 32, which would qualify as UB when using as a shift amount
+    //          ...so far in testing it is working fine on STM32 and Apple M1
+    reg_ = (reg_ >> shift_step_) | (reg_ << (-shift_step_ & static_cast<uint32_t>(31)));
 
     // Compute new/current NOTE value
     cur_val_ = reg_ & static_cast<uint32_t>(0xFF);
 
     // Set GATE status
-    cur_pls_ = lsb;
+    // TODO: should this be based on a mask, like flip_mask?
+    cur_pls_ = reg_ & static_cast<uint32_t>(1);
+
+    // mutate the register based on probability
+    // TODO: change the flip_mask based on sequence length(?)
+    if (stmlib::Random::GetSample() < prb_) {
+        uint32_t flip_mask = 0xFF;
+        reg_ ^= flip_mask;
+    }
 }

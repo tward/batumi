@@ -11,9 +11,9 @@ class ShiftRegister {
     void Init();
     void Step();
 
-    inline void SetProbability(uint8_t prb) { prb_ = prb; }
-    inline void SetRange(uint8_t rng) { rng_ = rng; }
-    inline void SetLength(uint8_t len) { len_ = len; }
+    inline void SetProbability(int16_t prb) { prb_ = prb; }
+    inline void SetRange(uint32_t rng) { rng_ = rng; }
+    inline void SetLength(uint32_t len) { shift_step_ = 32/len; }
     inline void SetDivision(uint8_t div) { div_ = div; }
 
     inline uint8_t GetNoteValue() { return cur_val_; }
@@ -21,9 +21,9 @@ class ShiftRegister {
 
   private:
     // control params
-    int16_t prb_ = 600;
+    int16_t prb_ = 6000;
     uint32_t rng_ = 2;
-    int32_t len_ = 8;
+    uint32_t shift_step_ = 0;
     uint32_t div_ = 1;
 
     // state
